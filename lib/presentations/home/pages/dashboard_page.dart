@@ -1,5 +1,3 @@
-// ignore_for_file: unused_element, prefer_const_constructors
-
 import 'package:flutter/material.dart';
 
 class DashboardPage extends StatefulWidget {
@@ -14,9 +12,9 @@ class _DashboardPageState extends State<DashboardPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Dashboard"),
+        title: const Text("Dashboard"),
       ),
-      body: Center(
+      body: const Center(
         child: Text("Dashboard"),
       ),
     );

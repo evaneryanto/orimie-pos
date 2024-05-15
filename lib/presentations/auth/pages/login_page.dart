@@ -74,7 +74,7 @@ class _LoginPageState extends State<LoginPage> {
           const SpaceHeight(24.0),
           Button.filled(
             onPressed: () {
-              Navigator.pushReplacement(
+              Navigator.push(
                 context,
                 MaterialPageRoute(
                   builder: (context) => const DashboardPage(),
