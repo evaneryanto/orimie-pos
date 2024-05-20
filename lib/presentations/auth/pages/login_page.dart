@@ -41,7 +41,7 @@ class _LoginPageState extends State<LoginPage> {
           const SpaceHeight(24.0),
           const Center(
             child: Text(
-              "POS Batch 11",
+              "Orimie",
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w700,
