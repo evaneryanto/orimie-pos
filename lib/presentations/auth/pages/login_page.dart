@@ -1,5 +1,10 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:orimie/core/assets/assets.gen.dart';
+import 'package:orimie/data/models/response/auth_response_model.dart';
+import 'package:orimie/presentations/auth/bloc/login/login_bloc.dart';
 
 import '../../../core/components/buttons.dart';
 import '../../../core/components/custom_text_field.dart';
@@ -65,24 +70,34 @@ class _LoginPageState extends State<LoginPage> {
             controller: usernameController,
             label: 'Username',
           ),
-          const SpaceHeight(12.0),
+          BlocListener<LoginBloc, LoginState>(
+            listener: (context, state) {},
+            child: const SpaceHeight(12.0),
+          ),
           CustomTextField(
             controller: passwordController,
             label: 'Password',
             obscureText: true,
           ),
           const SpaceHeight(24.0),
-          Button.filled(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const DashboardPage(),
-                ),
-              );
+          BlocBuilder<LoginBloc, LoginState>(
+            builder: (context, state) {
+              return state.maybeWhen(orElse: () {
+                return Button.filled(
+                  onPressed: () {
+                    context.read<LoginBloc>().add(LoginEvent.login(
+                        email: usernameController.text,
+                        password: passwordController.text));
+                  },
+                  label: 'Masuk',
+                );
+              }, loading: () {
+                return Center(
+                  child: CircularProgressIndicator(),
+                );
+              });
             },
-            label: 'Masuk',
-          ),
+          )
         ],
       ),
     );
