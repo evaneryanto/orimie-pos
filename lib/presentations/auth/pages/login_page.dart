@@ -1,8 +1,9 @@
-// ignore_for_file: prefer_const_constructors
+// ignore_for_file: prefer_const_constructors, unused_import
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:orimie/core/assets/assets.gen.dart';
+import 'package:orimie/core/extensions/build_context_ext.dart';
 import 'package:orimie/data/models/response/auth_response_model.dart';
 import 'package:orimie/presentations/auth/bloc/login/login_bloc.dart';
 
@@ -70,34 +71,51 @@ class _LoginPageState extends State<LoginPage> {
             controller: usernameController,
             label: 'Username',
           ),
-          BlocListener<LoginBloc, LoginState>(
-            listener: (context, state) {},
-            child: const SpaceHeight(12.0),
-          ),
+          const SpaceHeight(12.0),
           CustomTextField(
             controller: passwordController,
             label: 'Password',
             obscureText: true,
           ),
           const SpaceHeight(24.0),
-          BlocBuilder<LoginBloc, LoginState>(
-            builder: (context, state) {
-              return state.maybeWhen(orElse: () {
-                return Button.filled(
-                  onPressed: () {
-                    context.read<LoginBloc>().add(LoginEvent.login(
-                        email: usernameController.text,
-                        password: passwordController.text));
-                  },
-                  label: 'Masuk',
-                );
-              }, loading: () {
-                return Center(
-                  child: CircularProgressIndicator(),
-                );
-              });
+          BlocListener<LoginBloc, LoginState>(
+            listener: (context, state) {
+              state.maybeWhen(
+                orElse: () {},
+                succes: (authResponseModel) {
+                  Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const DashboardPage(),
+                      ));
+                },
+                error: (message) {
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    content: Text(message),
+                    backgroundColor: Colors.red,
+                  ));
+                },
+              );
             },
-          )
+            child: BlocBuilder<LoginBloc, LoginState>(
+              builder: (context, state) {
+                return state.maybeWhen(orElse: () {
+                  return Button.filled(
+                    onPressed: () {
+                      context.read<LoginBloc>().add(LoginEvent.login(
+                          email: usernameController.text,
+                          password: passwordController.text));
+                    },
+                    label: 'Masuk',
+                  );
+                }, loading: () {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                });
+              },
+            ),
+          ),
         ],
       ),
     );
